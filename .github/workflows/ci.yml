@@ -5,9 +5,6 @@ on:
     branches:
       - main # Or your main branch name
       # - develop # Or your develop branch name if you use one
-      # - 'feature/**' # Example for feature branches
-      # - 'bugfix/**' # Example for bugfix branches
-      # - 'hotfix/**' # Example for hotfix branches
   # pull_request:
   #   branches:
   #     - main # Or your main branch name
@@ -22,20 +19,4 @@ jobs:
           fetch-depth: 0 # Important: Fetch full history for commitlint
 
       - uses: wagoid/commitlint-github-action@v6
-        # with:
-        #   # Optional: Path to your commitlint config file
-        #   # config: ./commitlint.config.js 
-        #   # Optional: Array of commit scopes to ignore
-        #   # ignore: |
-        #   #   Merge branch 'main' into develop
-        #   #   Revert "some commit"
-        #   # Optional: Set the working directory
-        #   # cwd: ./path/to/project
-        #   # Optional: Fail only on PRs
-        #   # fail_on_prs: true # defaults to false
-        #   # Optional: Fail only on pushes
-        #   # fail_on_pushes: true # defaults to false
-        #   # Optional: Allow merges to pass
-        #   # allow_merges: true # defaults to false
-        #   # Optional: Allow reverts to pass
-        #   # allow_reverts: true # defaults to false
+        
