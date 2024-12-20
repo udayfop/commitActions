@@ -3,7 +3,7 @@ name: Lint Commit Messages
 on:
   push:
     branches:
-      - main # Or your main branch name
+      - mainsss # Or your main branch name
       # - develop # Or your develop branch name if you use one
   # pull_request:
   #   branches:

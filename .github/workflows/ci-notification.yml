@@ -1,0 +1,59 @@
+name: Lint, Deploy, and Notify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: wagoid/commitlint-github-action@v6
+
+  deploy:
+    needs: commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # - name: Your Deployment Steps # Replace with your actual deployment
+      #   id: deployment
+      #   run: |
+      #     echo "Simulating deployment to ${{ github.ref_name }}..."
+      #     sleep 3
+      #     # Your deployment commands go here
+      #     echo "Deployment simulation complete."
+
+      - name: MS Teams Notification (Success)
+        if: success() && steps.deployment.outcome == 'success'
+        uses: act1ona/ms-teams-notifier@v2
+        env:
+          MS_TEAMS_WEBHOOK_URI: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+        with:
+          status: Success
+          title: Deployment Successful!
+          message: |
+            Deployment to ${{ github.ref_name }} was successful.
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          color: '00FF00' # Green
+
+      - name: MS Teams Notification (Failure)
+        if: failure() || steps.deployment.outcome != 'success'
+        uses: act1ona/ms-teams-notifier@v2
+        env:
+          MS_TEAMS_WEBHOOK_URI: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+        with:
+          status: Failure
+          title: Deployment Failed!
+          message: |
+            Deployment to ${{ github.ref_name }} failed.
+            Commit: ${{ github.sha }}
+            Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          color: 'FF0000' # Red
