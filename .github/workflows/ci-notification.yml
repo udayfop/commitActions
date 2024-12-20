@@ -24,7 +24,7 @@ jobs:
 
       - name: MS Teams Notification (Success)
         if: success() && steps.deployment.outcome == 'success'
-        uses: ms-teams/send-message@v1
+        uses: act1ona/ms-teams-notifier@v2
         with:
           message: |
             Deployment to ${{ github.ref_name }} was successful.
@@ -34,7 +34,7 @@ jobs:
 
       - name: MS Teams Notification (Failure)
         if: failure() || steps.deployment.outcome != 'success'
-        uses: ms-teams/send-message@v1
+        uses: act1ona/ms-teams-notifier@v2
         with:
           message: |
             Deployment to ${{ github.ref_name }} failed.
