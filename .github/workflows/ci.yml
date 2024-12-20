@@ -1,34 +1,41 @@
-name: CI/CD Pipeline
+name: Lint Commit Messages
 
 on:
   push:
     branches:
-      - main
+      - main # Or your main branch name
+      # - develop # Or your develop branch name if you use one
+      # - 'feature/**' # Example for feature branches
+      # - 'bugfix/**' # Example for bugfix branches
+      # - 'hotfix/**' # Example for hotfix branches
   # pull_request:
-    # branches: [main, develop]
+  #   branches:
+  #     - main # Or your main branch name
+  #     - develop # Or your develop branch name if you use one
 
 jobs:
-  lint:
+  commitlint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0 # Crucial: Fetch full history
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
-      - name: Lint commit messages
-        run: |
-          if [[ $(git log --pretty=format:"%s" -n 1) == "Initial commit" ]]; then
-            echo "Skipping commit linting for initial commit"
-          else
-            npx commitlint --from ${{ github.event.before }} --to ${{ github.sha }} --verbose || exit 1
-          fi
-      - name: Run linting (if applicable)
-        run: npm run lint # Other linters (ESLint, etc.)
+          fetch-depth: 0 # Important: Fetch full history for commitlint
 
-  # ... (rest of your build, test, deploy jobs)
+      - uses: wagoid/commitlint-github-action@v6
+        # with:
+        #   # Optional: Path to your commitlint config file
+        #   # config: ./commitlint.config.js 
+        #   # Optional: Array of commit scopes to ignore
+        #   # ignore: |
+        #   #   Merge branch 'main' into develop
+        #   #   Revert "some commit"
+        #   # Optional: Set the working directory
+        #   # cwd: ./path/to/project
+        #   # Optional: Fail only on PRs
+        #   # fail_on_prs: true # defaults to false
+        #   # Optional: Fail only on pushes
+        #   # fail_on_pushes: true # defaults to false
+        #   # Optional: Allow merges to pass
+        #   # allow_merges: true # defaults to false
+        #   # Optional: Allow reverts to pass
+        #   # allow_reverts: true # defaults to false
